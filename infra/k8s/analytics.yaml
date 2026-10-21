@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azz-analytics
+spec:
+  replicas: 2
+  selector:
+    matchLabels: {app: azz-analytics}
+  template:
+    metadata:
+      labels: {app: azz-analytics}
+    spec:
+      containers:
+        - name: analytics
+          image: ghcr.io/REPLACE_OWNER/azz-analytics:REPLACE_TAG
+          ports: [{containerPort: 8080}]
+          env:
+            - name: ANALYTICS_API_KEY
+              valueFrom:
+                secretKeyRef: {name: azz-analytics-secret, key: api-key}
+          readinessProbe:
+            httpGet: {path: /health, port: 8080}
+            initialDelaySeconds: 3
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {cpu: 500m, memory: 512Mi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: azz-analytics
+spec:
+  selector: {app: azz-analytics}
+  ports: [{port: 80, targetPort: 8080}]
