@@ -1,7 +1,33 @@
 services:
   - type: web
-    name: azz-logistics
+    # Optional standalone backend. The unified deployment uses the existing Leader service.
+    name: azz-logistics-verify
     runtime: node
-    plan: free
-    buildCommand: npm install
+    # Paid compute and a persistent disk are required for durable local SQLite state.
+    plan: starter
+    autoDeployTrigger: 'off'
+    numInstances: 1
+    buildCommand: npm ci && npm test
     startCommand: npm start
+    healthCheckPath: /healthz
+    disk:
+      name: azz-verification-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: '24'
+      - key: DATABASE_PATH
+        value: /var/data/azz.sqlite
+      - key: APP_ORIGIN
+        sync: false
+      - key: APP_SECRET
+        generateValue: true
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_VERIFY_SERVICE_SID
+        sync: false

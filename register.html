@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#07172c">
+  <title>حساب الطالب | AZZ LOGISTICS</title>
+  <link rel="stylesheet" href="registration.css">
+  <script src="auth-config.js" defer></script>
+  <script src="registration.js" defer></script>
+</head>
+<body>
+  <main>
+    <a class="brand" href="index.html">✦ AZZ LOGISTICS | عز لوجستيك</a>
+    <h1>حساب الطالب</h1>
+    <p>سجّل أو ادخل برقم هاتفك. التحقق من الهاتف لا يثبت صفتك طالبًا ولا يمنحك صلاحيات الإدارة؛ الوصول الخاص يتطلب اعتماد الإدارة بشكل مستقل.</p>
+    <p id="status" role="status" aria-live="polite">جارٍ التحقق من توفر الخدمة…</p>
+    <a id="backend-link" class="button" hidden>انتقل إلى التسجيل الآمن</a>
+    <form id="phone-form" hidden>
+      <label for="name">الاسم (اختياري عند التسجيل الأول)</label>
+      <input id="name" name="name" maxlength="100" autocomplete="name">
+      <label for="phone">رقم الهاتف مع رمز الدولة</label>
+      <input id="phone" name="phone" type="tel" dir="ltr" placeholder="+9665XXXXXXXX" autocomplete="tel" pattern="\+[1-9][0-9]{7,14}" maxlength="16" required>
+      <p class="hint">مثال الصيغة: +966 ثم الرقم دون الصفر الأول.</p>
+      <label class="consent"><input id="consent" type="checkbox" required> أوافق على إرسال رمز SMS للتحقق، ومعالجة رقمي لهذا الغرض وتخزينه لحسابي. لا ترسل المنصة رسائل تسويقية عبر هذا النموذج.</label>
+      <button id="send" type="submit">إرسال رمز التحقق</button>
+    </form>
+    <form id="code-form" hidden>
+      <label for="code">رمز التحقق</label>
+      <input id="code" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{4,10}" maxlength="10" dir="ltr" required>
+      <button id="verify" type="submit">تحقق وادخل</button>
+      <button id="change" type="button" class="secondary">تغيير الرقم / إعادة الإرسال</button>
+      <p class="hint">تنتهي المحاولة بعد 10 دقائق. انتظر دقيقة قبل طلب رمز آخر.</p>
+    </form>
+    <section id="account" hidden aria-labelledby="account-heading">
+      <h2 id="account-heading">حالة الحساب</h2>
+      <p id="account-status"></p>
+      <button id="refresh" type="button">تحديث حالة الاعتماد</button>
+      <button id="logout" type="button" class="secondary">تسجيل الخروج</button>
+    </section>
+    <p class="hint">لن نطلب رقم الهوية الوطنية أو بيانات دخول الجامعة. يتحقق Twilio من الهاتف فقط. الاختبارات العامة متاحة من <a href="index.html#tests">الصفحة الرئيسية</a>.</p>
+    <noscript>يتطلب التحقق تفعيل JavaScript.</noscript>
+  </main>
+</body>
+</html>
