@@ -1,4 +1,5 @@
 import os
+import json
 from fastapi import FastAPI, Header, HTTPException
 from pydantic import BaseModel, Field
 import pandas as pd
@@ -24,4 +25,4 @@ def summary(batch: Batch, x_analytics_key: str | None = Header(default=None)):
     frame = pd.DataFrame([r.model_dump() for r in batch.results])
     grouped = frame.groupby("course", as_index=False).agg(average=("score","mean"), attempts=("score","size"))
     fig = px.bar(grouped, x="course", y="average", hover_data=["attempts"], title="متوسط النتائج حسب المقرر")
-    return {"courses": grouped.to_dict(orient="records"), "chart": fig.to_dict()}
+    return {"courses": grouped.to_dict(orient="records"), "chart": json.loads(fig.to_json())}
