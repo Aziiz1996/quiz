@@ -12,6 +12,7 @@ const publicFiles = new Map([
   ['/business-administration.html', ['business-administration.html', 'text/html']],
   ['/purchasing-102.html', ['purchasing-102.html', 'text/html']],
   ['/inventory.html', ['inventory.html', 'text/html']],
+  ['/library.html', ['library.html', 'text/html']], ['/films.html', ['films.html', 'text/html']],
   ['/sw.js', ['sw.js', 'text/javascript']], ['/manifest.webmanifest', ['manifest.webmanifest', 'application/manifest+json']],
   ...['favicon.png', 'apple-touch-icon.png', 'az-logistics-icon.png', 'icon-192.png', 'icon-512.png'].map(p => ['/' + p, [p, 'image/png']])
 ]);

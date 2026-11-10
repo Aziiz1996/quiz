@@ -81,3 +81,25 @@ test('public HTTP server denies source/secrets and sets CSP and no-store headers
   assert.equal(me.headers.get('cache-control'), 'no-store');
   assert.equal((await fetch(base + '/api/verify/start', { method: 'POST', headers: { Origin: 'https://example.test', 'Content-Type': 'application/json' }, body: '{}' })).status, 503);
 });
+
+test('every local link reachable from the homepage is served', async t => {
+  const app = createApplication({ database: ':memory:', origin: 'https://example.test', key: 'test-only'.repeat(8) });
+  const server = app.listen(0, '127.0.0.1');
+  await new Promise(resolve => server.once('listening', resolve));
+  t.after(async () => { await new Promise(resolve => server.close(resolve)); app.db.close(); });
+  const base = `http://127.0.0.1:${server.address().port}`;
+  const seen = new Set(), queue = ['/'];
+  while (queue.length) {
+    const path = queue.shift();
+    if (seen.has(path)) continue;
+    seen.add(path);
+    const res = await fetch(base + path);
+    assert.equal(res.status, 200, `${path} should be served`);
+    if (!res.headers.get('content-type').startsWith('text/html')) continue;
+    for (const [, ref] of (await res.text()).matchAll(/(?:href|src)="([^"#?]+)/g)) {
+      if (/^[a-z][a-z0-9+.-]*:/i.test(ref)) continue; // external or data: URLs
+      queue.push(new URL(ref, base + path).pathname);
+    }
+  }
+  for (const page of ['/library.html', '/films.html']) assert.ok(seen.has(page), `${page} should be linked`);
+});
